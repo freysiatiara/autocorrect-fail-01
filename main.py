@@ -27,6 +27,8 @@ def resolve_output_path():
 
 
 def main():
+    if not ENTRY_TEXT or len(ENTRY_TEXT) > 199:
+        raise ValueError("entry text must be 1-199 characters")
     path = resolve_output_path()
     directory = os.path.dirname(path)
     if directory:
@@ -34,6 +36,9 @@ def main():
     with open(path, "w", encoding="utf-8", newline="") as handle:
         handle.write(ENTRY_TEXT)
     os.chmod(path, 0o644)
+    with open(path, "r", encoding="utf-8", newline="") as handle:
+        if handle.read() != ENTRY_TEXT:
+            raise ValueError("written entry does not match intended text")
 
 
 if __name__ == "__main__":
